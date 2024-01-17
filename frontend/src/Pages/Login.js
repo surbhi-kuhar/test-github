@@ -13,13 +13,13 @@ function Login() {
           <div>
             <label>Email address</label>
             <br />
-            <input placeholder="email" type="email" required />
+            <input placeholder="Email" type="email" required />
             <br />
           </div>
           <div>
             <label>Password</label>
             <br />
-            <input type="password" placeholder="password" required />
+            <input type="password" placeholder="Password" required />
           </div>
 
           <div className="options">
