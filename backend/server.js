@@ -3,6 +3,7 @@ const app=express();
 const cookie=require("cookie-parser");
 var jwt = require('jsonwebtoken');
 const port=8000;
+console.log(":here");
 app.use(cookie());
 const server=app.listen(port,()=>{
     console.log("server is running on port "+port);
