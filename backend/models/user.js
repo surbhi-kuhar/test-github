@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const bcrypt=require("bcrypt");
 const userSchema = new mongoose.Schema(
   {
     fullname: {
@@ -22,15 +22,12 @@ const userSchema = new mongoose.Schema(
     address: {
       country: {
         type: String,
-        required: true,
       },
       city: {
         type: String,
-        required: true,
       },
       address1: {
         type: String,
-        required: true,
       },
       address2: {
         type: String,
@@ -40,7 +37,6 @@ const userSchema = new mongoose.Schema(
       },
       addressType: {
         type: String,
-        required: true,
       },
     },
     role: {

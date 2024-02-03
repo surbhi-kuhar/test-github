@@ -2,18 +2,20 @@ const express=require("express");
 const app=express();
 const cookie=require("cookie-parser");
 var jwt = require('jsonwebtoken');
+const bodyParser=require('body-parser');
 const dotenv = require("dotenv");
 const userRoutes=require("./routes/userRoutes");
 const errorHandler=require("./utils/errorHanler");
 const connectDb=require("./config/database");
+const cors=require("cors");
 dotenv.config();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.json());
 app.use(cookie());
-const always=(req,res,next)=>{
-    console.log("always");
-    next();
-}
-app.use(always);
-app.use('/login',userRoutes);
+app.use(cors());
+//app.use('/uploads', express.static('uploads'));
+app.use('/api/v1/user',userRoutes);
 app.use(errorHandler);
 connectDb();
 const server=app.listen( process.env.PORT,()=>{

@@ -1,17 +1,70 @@
 import React, { useState } from "react";
 import "./styles/SignUp.css";
 import { Link } from "react-router-dom";
+import hidepng from '../images/hide.png';
+import showpng from '../images/show.png';
+import { server } from "../FixedUrl";
+import axios from "axios";
 
 function SignUp() {
   const [passwordLength, setPasswordLength] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [fullname, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState(null);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setAvatar(reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      setAvatar(null);
+    }
+  };
+
+  const handlePaswordVisible = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handlePassword = (e) => {
     const val = e.target.value;
-    if (val.length < 8) {
-      setPasswordLength(true);
-    } else setPasswordLength(false);
+    setPassword(val);
+    setPasswordLength(val.length < 8);
   };
-  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!fullname || !email || !password) return;
+
+    const formdata = new FormData();
+    formdata.append("file", avatar);
+    formdata.append("fullname", fullname);
+    formdata.append("email", email);
+    formdata.append("password", password);
+
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
+    try {
+      const { data } = await axios.post(`${server}/user/signup`, formdata, config);
+      console.log("user", data.user);
+    } catch (err) {
+      console.log("err", err);
+    }
+  };
+
   return (
     <div className="body">
       <div className="center-div">
@@ -22,14 +75,14 @@ function SignUp() {
           <div>
             <label>Full name</label>
             <br />
-            <input placeholder="Full name" type="text" required />
+            <input value={fullname} onChange={(e) => setFullName(e.target.value)} placeholder="Full name" type="text" required />
             <br />
           </div>
 
           <div>
             <label>Email address</label>
             <br />
-            <input placeholder="Email " type="email" required />
+            <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" type="email" required />
             <br />
           </div>
 
@@ -38,30 +91,27 @@ function SignUp() {
             <br />
             <input
               placeholder="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               onChange={(e) => handlePassword(e)}
               required
             />
-            {passwordLength ? (
-              <i className="error">Minimum 8 characters allowed</i>
-            ) : (
-              ""
-            )}
+            {showPassword ? <span onClick={handlePaswordVisible}><img src={showpng} alt="showpng" /></span> : <span onClick={handlePaswordVisible}><img src={hidepng} alt="hidepng" /></span>}
+            {passwordLength && <i className="error">Minimum 8 characters allowed</i>}
           </div>
 
           <div className="profile">
             <div className="user-logo">
-              <i class="fa-solid fa-user"></i>
+              {avatar !== null ? <img src={avatar} alt="User Avatar" /> : <i className="fa-solid fa-user"></i>}
             </div>
             <div>
-              <input type="file" />
+              <input type="file" accept="image/*" onChange={handleAvatarChange} />
             </div>
             <div>
               <i className="avatar">Upload your avatar</i>
             </div>
           </div>
 
-          <button className="submit-btn">Submit</button>
+          <button onClick={handleSubmit} className="submit-btn">Submit</button>
 
           <p>
             Already have an account?

@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles/Login.css";
 import { Link } from "react-router-dom";
-
+import hidepng from "../images/hide.png";
+import showpng from "../images/show.png";
 function Login() {
+  const[showPassword,setShowPassword]=useState(false);
+  const handlePaswordVisible=()=>{
+    setShowPassword(!showPassword);
+  }
   return (
     <div className="body">
       <div className="center-div">
@@ -19,7 +24,9 @@ function Login() {
           <div>
             <label>Password</label>
             <br />
-            <input type="password" placeholder="Password" required />
+            <input type={showPassword===true?"text":"password"} placeholder="Password" required />
+            {showPassword?<span onClick={handlePaswordVisible}><img src={showpng} alt="showpng"/></span>:<span onClick={handlePaswordVisible}
+            ><img src={hidepng} alt="hidepng"/></span>}
           </div>
 
           <div className="options">
