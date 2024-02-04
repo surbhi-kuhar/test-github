@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookie());
 app.use(cors());
-//app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static('uploads'));
 app.use('/api/v1/user',userRoutes);
 app.use(errorHandler);
 connectDb();

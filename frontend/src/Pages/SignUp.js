@@ -9,10 +9,10 @@ import axios from "axios";
 function SignUp() {
   const [passwordLength, setPasswordLength] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [fullname, setFullName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [avatar, setAvatar] = useState(null);
+  const [file, setFile] = useState(null);
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -21,12 +21,14 @@ function SignUp() {
       const reader = new FileReader();
 
       reader.onloadend = () => {
-        setAvatar(reader.result);
+        setFile(reader.result);
+        console.log("file uploaded succesfully");
       };
 
       reader.readAsDataURL(file);
     } else {
-      setAvatar(null);
+      setFile(null);
+      console.log("file uploaded failed");
     }
   };
 
@@ -43,11 +45,11 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!fullname || !email || !password) return;
+    if (!name || !email || !password) return;
 
     const formdata = new FormData();
-    formdata.append("file", avatar);
-    formdata.append("fullname", fullname);
+    formdata.append("file", file);
+    formdata.append("name",name);
     formdata.append("email", email);
     formdata.append("password", password);
 
@@ -75,7 +77,7 @@ function SignUp() {
           <div>
             <label>Full name</label>
             <br />
-            <input value={fullname} onChange={(e) => setFullName(e.target.value)} placeholder="Full name" type="text" required />
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" type="text" required />
             <br />
           </div>
 
@@ -101,18 +103,17 @@ function SignUp() {
 
           <div className="profile">
             <div className="user-logo">
-              {avatar !== null ? <img src={avatar} alt="User Avatar" /> : <i className="fa-solid fa-user"></i>}
+              {file !== null ? <img src={file} alt="User Avatar" /> : <i className="fa-solid fa-user"></i>}
             </div>
             <div>
-              <input type="file" accept="image/*" onChange={handleAvatarChange} />
+              <input type="file" name="file"  onChange={handleAvatarChange} />
             </div>
             <div>
               <i className="avatar">Upload your avatar</i>
             </div>
           </div>
 
-          <button onClick={handleSubmit} className="submit-btn">Submit</button>
-
+          <button  onClick={handleSubmit} className="submit-btn">Submit</button>
           <p>
             Already have an account?
             <Link to="/login">
