@@ -7,6 +7,7 @@ const sendEmail = require("../utils/sendMail");
 //const sendToken = require("../utils/sendToken");
 const sendToken=async(user,statusCode,message,res)=>{
   const token=user.getToken();
+  console.log("hello");
   // options for cookies
   //const COOKIES_EXPIRES=Number
   res.cookie('token', token, {
@@ -18,7 +19,6 @@ const sendToken=async(user,statusCode,message,res)=>{
       message:message,
       success:true
   })
-  console.log("hello");
 };
 
 module.exports.signup = async (req, res, next) => {
