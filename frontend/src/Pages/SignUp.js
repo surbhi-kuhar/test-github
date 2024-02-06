@@ -12,22 +12,24 @@ function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [file, setFile] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+  const[image,setImage]=useState(null);
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
 
     if (file) {
       const reader = new FileReader();
-
+      setImage(file);
       reader.onloadend = () => {
-        setFile(reader.result);
+        setAvatar(reader.result);
+        console.log(avatar);
         console.log("file uploaded succesfully");
       };
 
       reader.readAsDataURL(file);
     } else {
-      setFile(null);
+      setAvatar(null);
       console.log("file uploaded failed");
     }
   };
@@ -48,7 +50,7 @@ function SignUp() {
     if (!name || !email || !password) return;
 
     const formdata = new FormData();
-    formdata.append("file", file);
+    formdata.append("file", image);
     formdata.append("name",name);
     formdata.append("email", email);
     formdata.append("password", password);
@@ -103,7 +105,7 @@ function SignUp() {
 
           <div className="profile">
             <div className="user-logo">
-              {file !== null ? <img src={file} alt="User Avatar" /> : <i className="fa-solid fa-user"></i>}
+              {avatar !== null ? <img src={avatar} alt="User Avatar" /> : <i className="fa-solid fa-user"></i>}
             </div>
             <div>
               <input type="file" name="file"  onChange={handleAvatarChange} />
@@ -112,7 +114,6 @@ function SignUp() {
               <i className="avatar">Upload your avatar</i>
             </div>
           </div>
-
           <button  onClick={handleSubmit} className="submit-btn">Submit</button>
           <p>
             Already have an account?

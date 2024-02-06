@@ -1,5 +1,5 @@
 const express=require("express");
-const { signup,createActualUser } = require("../controller/userController");
+const { signup,createActualUser, login } = require("../controller/userController");
 const router=express.Router();
 //const {upload}=require("../multer.js");
 const multer = require("multer");
@@ -18,4 +18,5 @@ const upload = multer({ storage: storage });
 console.log("in Routs");
 router.post('/signup',upload.single("file"),signup);
 router.post("/activation",upload.single("file"),createActualUser);
+router.post("/login",upload.single("file"),login);
 module.exports=  router;

@@ -1,3 +1,5 @@
+
+
 const customError = require("../middleware/customError");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
@@ -19,10 +21,10 @@ const sendToken=async(user,statusCode,message,res)=>{
 };
 
 module.exports.signup = async (req, res, next) => {
+  console.log("indside");
   const { name, email, password } = req.body;
   console.log("inside controller");
   console.log(name, email, password);
-
   const user = await User.findOne({ email: email });
   if (user) {
     next(new customError("User Already Exists", 400));
@@ -69,4 +71,36 @@ const createActivationToken = (user) =>{
   return jwt.sign({ id:user}, process.env.jwtActivationSecret, {
     expiresIn: "5m",
   });
+};
+module.exports.login = async (req, res, next) => {
+  let data = req.body;
+  const { email, password } = data;
+  const user = await User.findOne({ email:email }).select("password");
+  console.log(user);
+  if (!user) {
+    res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  } else {
+    try {
+      console.log("1");
+      const passMatch = await user.checkPassword(password);
+      console.log("2");
+      if (!passMatch) {
+        res.status(401).json({
+          success: false,
+          message: "Unauthorized user",
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: "user logged in successfully",
+        });
+      }
+    } catch (err) {
+      console.log("sere");
+      next(new customError(err.message, 400));
+    }
+  }
 };
