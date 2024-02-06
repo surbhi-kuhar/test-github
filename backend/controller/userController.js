@@ -18,6 +18,7 @@ const sendToken=async(user,statusCode,message,res)=>{
       message:message,
       success:true
   })
+  console.log("hello");
 };
 
 module.exports.signup = async (req, res, next) => {
