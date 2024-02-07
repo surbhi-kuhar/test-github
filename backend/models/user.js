@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const crypt=require("crypto");
 const userSchema = new mongoose.Schema(
   {
     fullname: {
@@ -22,15 +24,12 @@ const userSchema = new mongoose.Schema(
     address: {
       country: {
         type: String,
-        required: true,
       },
       city: {
         type: String,
-        required: true,
       },
       address1: {
         type: String,
-        required: true,
       },
       address2: {
         type: String,
@@ -40,7 +39,6 @@ const userSchema = new mongoose.Schema(
       },
       addressType: {
         type: String,
-        required: true,
       },
     },
     role: {
@@ -53,6 +51,25 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
+userSchema.methods.checkPassword = async function (currentpassword) {
+  const decoded = await bcrypt.compare(currentpassword, this.password);
+  return decoded;
+};
+
+userSchema.methods.getToken = function () {
+  const jwtSecretKey = process.env.JwtSecretKey;
+  const jwtExpires = process.env.jwtExpires;
+  return jwt.sign({ id: this._id }, jwtSecretKey, {
+    expiresIn: jwtExpires,
+  });
+};
 const UserModel = mongoose.model("User", userSchema);
 module.exports = UserModel;
