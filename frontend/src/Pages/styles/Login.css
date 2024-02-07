@@ -8,7 +8,9 @@
   align-items: center;
   background-color: rgb(244, 243, 243);
 }
-
+img{
+  height:2rem;
+}
 .center-div {
   width: 30%;
   height: 60vh;
