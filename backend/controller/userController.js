@@ -1,11 +1,7 @@
-
-
 const customError = require("../middleware/customError");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendMail");
-const cloudinary=require("cloudinary");
-//const sendToken = require("../utils/sendToken");
 const sendToken=async(user,statusCode,message,res)=>{
   const token=user.getToken();
   console.log("hello");
@@ -51,14 +47,14 @@ module.exports.signup = async (req, res, next) => {
   
     const activationToken = createActivationToken(newUserToBeCreated);
   
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+    const activationUrl = http://localhost:3000/activation/${activationToken};
   
     console.log(newUserToBeCreated.email);
   
     await sendEmail({
       email: newUserToBeCreated.email,
       subject: "Activate Your Account",
-      message: `Hello ${newUserToBeCreated.fullname} Please Click To Activate On The Link For Your Account: ${activationUrl}`,
+      message: Hello ${newUserToBeCreated.fullname} Please Click To Activate On The Link For Your Account: ${activationUrl},
     });
   
     res.status(200).json({
@@ -70,33 +66,26 @@ module.exports.signup = async (req, res, next) => {
     next(new customError(err.message, err.statusCode || 500)); // Pass the status code if available
   }
 };
-
-module.exports.createActualUser=async(req,res,next)=>{
-   console.log("calledd Actual");
-   const {activationToken}=req.body;
-   console.log("activationToken", activationToken);
-   const newuser=await jwt.verify(activationToken, process.env.jwtActivationSecret);
-   console.log(newuser);
-   const {id}=newuser;
-   if(!newuser){
-      next(new customError("ToKen Expired",400));
-   }
-   try {
-      const user = await User.findOne({ email:id.email });
-      if(user){
-        res.status(400).json({
-          success:false,
-          message:"cannot Create Againn",
-          user:"user is not there"
-        })
-        return;
-      }
-      const u = await User.create({ ...id });
-      sendToken(u,201,"User Created Succesfully",res);
-    } catch (err) {
-      next(new customError(err.message, 500));
-    }
-}
+module.exports.createActualUser = async (req, res, next) => {
+  console.log("called Actual");
+  const { activationToken } = req.body;
+  console.log("activationToken", activationToken);
+  const newuser = await jwt.verify(
+    activationToken,
+    process.env.jwtActivationSecret
+  );
+  console.log(newuser);
+  const { id } = newuser;
+  if (!newuser) {
+    next(new customError("ToKen Expired", 400));
+  }
+  try {
+    const u = await User.create(id);
+    sendToken(u, 201, "User Created Succesfully", res);
+  } catch (err) {
+    next(new customError(err.message, 500));
+  }
+};
 const createActivationToken = (user) =>{
   return jwt.sign({ id:user}, process.env.jwtActivationSecret, {
     expiresIn: "5m",
@@ -129,5 +118,71 @@ module.exports.login = async (req, res, next) => {
       console.log("sere");
       next(new customError(err.message, 400));
     }
+  }
+};
+
+module.exports.getUser = async (req, res, next) => {
+  let id = req.params.id;
+
+  try {
+    const user = await User.findById(id);
+    if (user) {
+      res.status(200).json({
+        success: true,
+        message: "user found",
+        user,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "user not found",
+      });
+    }
+  } catch (err) {
+    next(new customError(err));
+  }
+};
+
+module.exports.updateUser = async (req, res, next) => {
+  const id = req.params.id;
+  const data = req.body;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
+    if (updatedUser) {
+      res.status(200).json({
+        success: true,
+        message: "user updated successfully",
+        updatedUser,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "failed to update user",
+      });
+    }
+  } catch (err) {
+    next(new customError(err));
+  }
+};
+
+module.exports.deleteUser = async (req, res, next) => {
+  const id = req.params.id;
+
+  try {
+    const deletecheck = await User.findByIdAndDelete(id);
+    if (deletecheck) {
+      res.status(200).json({
+        success: true,
+        message: "user deleted successfully",
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "failed to delete user",
+      });
+    }
+  } catch (err) {
+    next(new customError(err));
   }
 };
