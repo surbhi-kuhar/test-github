@@ -4,6 +4,7 @@ const customError = require("../middleware/customError");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendMail");
+const cloudinary=require("cloudinary");
 //const sendToken = require("../utils/sendToken");
 const sendToken=async(user,statusCode,message,res)=>{
   const token=user.getToken();
@@ -22,35 +23,54 @@ const sendToken=async(user,statusCode,message,res)=>{
 };
 
 module.exports.signup = async (req, res, next) => {
-  console.log("indside");
+  console.log("inside");
   const { name, email, password } = req.body;
-  console.log("inside controller");
-  console.log(name, email, password);
-  const user = await User.findOne({ email: email });
-  if (user) {
-    next(new customError("User Already Exists", 400));
-    return; // Added return to prevent the code below from executing
-  }
-  const newUserToBeCreated = {
-   fullname: name,
-   email: email,
-   password: password,
-   image: "req.file.filename", // Corrected the image property
- };
-  const activationToken =  createActivationToken(newUserToBeCreated);
-
-  const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+  
   try {
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "avatars",
+      width: 150,
+      crop: "scale"
+    });
+    
+    console.log("inside controller");
+    console.log(name, email, password);
+  
+    const user = await User.findOne({ email: email });
+  
+    if (user) {
+      throw new customError("User Already Exists", 400); // Throw error instead of using next()
+    }
+  
+    const newUserToBeCreated = {
+      fullname: name,
+      email: email,
+      password: password,
+      image: myCloud.url // Accessing the URL property of myCloud directly
+    };
+  
+    const activationToken = createActivationToken(newUserToBeCreated);
+  
+    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+  
+    console.log(newUserToBeCreated.email);
+  
     await sendEmail({
       email: newUserToBeCreated.email,
       subject: "Activate Your Account",
       message: `Hello ${newUserToBeCreated.fullname} Please Click To Activate On The Link For Your Account: ${activationUrl}`,
     });
+  
+    res.status(200).json({
+      success: true,
+      user:"user needs to br crested",
+      message: "email sent"
+    });
   } catch (err) {
-    next(new customError(err.message, 500));
-    return; // Added return to prevent the code below from executing
+    next(new customError(err.message, err.statusCode || 500)); // Pass the status code if available
   }
 };
+
 module.exports.createActualUser=async(req,res,next)=>{
    console.log("calledd Actual");
    const {activationToken}=req.body;
@@ -62,6 +82,15 @@ module.exports.createActualUser=async(req,res,next)=>{
       next(new customError("ToKen Expired",400));
    }
    try {
+      const user = await User.findOne({ email:id.email });
+      if(user){
+        res.status(400).json({
+          success:false,
+          message:"cannot Create Againn",
+          user:"user is not there"
+        })
+        return;
+      }
       const u = await User.create({ ...id });
       sendToken(u,201,"User Created Succesfully",res);
     } catch (err) {
@@ -76,7 +105,7 @@ const createActivationToken = (user) =>{
 module.exports.login = async (req, res, next) => {
   let data = req.body;
   const { email, password } = data;
-  const user = await User.findOne({ email:email }).select("password");
+  const user = await User.findOne({ email:email }).select("+password");
   console.log(user);
   if (!user) {
     res.status(404).json({
@@ -94,10 +123,7 @@ module.exports.login = async (req, res, next) => {
           message: "Unauthorized user",
         });
       } else {
-        res.status(200).json({
-          success: true,
-          message: "user logged in successfully",
-        });
+        sendToken(user,201,"Login Succesful",res);
       }
     } catch (err) {
       console.log("sere");

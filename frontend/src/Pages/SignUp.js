@@ -20,14 +20,16 @@ function SignUp() {
 
     if (file) {
       const reader = new FileReader();
-      setImage(file);
-      reader.onloadend = () => {
-        setAvatar(reader.result);
-        console.log(avatar);
-        console.log("file uploaded succesfully");
+
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setImage(reader.result);
+          setAvatar(reader.result);
+          console.log("image uploaded");
+        }
       };
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(e.target.files[0]);
     } else {
       setAvatar(null);
       console.log("file uploaded failed");
@@ -47,10 +49,10 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !password) return;
+    if (!name || !email || !password||!avatar) return;
 
     const formdata = new FormData();
-    formdata.append("file", image);
+    formdata.append("avatar", avatar);
     formdata.append("name",name);
     formdata.append("email", email);
     formdata.append("password", password);

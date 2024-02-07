@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 console.log("in Routs");
-router.post('/signup',upload.single("file"),signup);
-router.post("/activation",upload.single("file"),createActualUser);
-router.post("/login",upload.single("file"),login);
+router.post('/signup',signup);
+router.post("/activation",createActualUser);
+router.post("/login",login);
 module.exports=  router;
