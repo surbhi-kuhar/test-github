@@ -16,6 +16,3 @@ router.get("/get/:id", getUser);
 router.put("/update/:id", updateUser);
 router.delete("/delete/:id", deleteUser);
 module.exports = router;
-
-
-

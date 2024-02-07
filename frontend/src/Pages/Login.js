@@ -1,13 +1,23 @@
 import React, { useState } from "react";
 import "./styles/Login.css";
 import { Link } from "react-router-dom";
-import hidepng from "../images/hide.png";
-import showpng from "../images/show.png";
+import axios from "axios";
+
 function Login() {
-  const[showPassword,setShowPassword]=useState(false);
-  const handlePaswordVisible=()=>{
-    setShowPassword(!showPassword);
-  }
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+    const {data} = await axios.post("http://localhost:8000/api/v1/user/login", formData);
+    console.log(data);
+    if (!data.success) {
+      console.log("Email or password entered is wrong");
+    }
+  };
+
   return (
     <div className="body">
       <div className="center-div">
@@ -18,15 +28,23 @@ function Login() {
           <div>
             <label>Email address</label>
             <br />
-            <input placeholder="Email" type="email" required />
+            <input
+              placeholder="Email"
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
             <br />
           </div>
           <div>
             <label>Password</label>
             <br />
-            <input type={showPassword===true?"text":"password"} placeholder="Password" required />
-            {showPassword?<span onClick={handlePaswordVisible}><img src={showpng} alt="showpng"/></span>:<span onClick={handlePaswordVisible}
-            ><img src={hidepng} alt="hidepng"/></span>}
+            <input
+              type="password"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </div>
 
           <div className="options">
@@ -40,7 +58,9 @@ function Login() {
             </div>
           </div>
 
-          <button className="submit-btn">Submit</button>
+          <button className="submit-btn" onClick={handleSubmit}>
+            Submit
+          </button>
 
           <p>
             Not have any account?{" "}

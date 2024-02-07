@@ -47,14 +47,14 @@ module.exports.signup = async (req, res, next) => {
   
     const activationToken = createActivationToken(newUserToBeCreated);
   
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+    const activationUrl = http://localhost:3000/activation/${activationToken};
   
     console.log(newUserToBeCreated.email);
   
     await sendEmail({
       email: newUserToBeCreated.email,
       subject: "Activate Your Account",
-      message: `Hello ${newUserToBeCreated.fullname} Please Click To Activate On The Link For Your Account: ${activationUrl}`,
+      message: Hello ${newUserToBeCreated.fullname} Please Click To Activate On The Link For Your Account: ${activationUrl},
     });
   
     res.status(200).json({
