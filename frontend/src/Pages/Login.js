@@ -6,15 +6,21 @@ import axios from "axios";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState({});
 
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
-    const {data} = await axios.post("http://localhost:8000/api/v1/user/login", formData);
+    const { data } = await axios.post(
+      "http://localhost:8000/api/v1/user/login",
+      formData
+    );
     console.log(data);
     if (!data.success) {
       console.log("Email or password entered is wrong");
+    } else {
+      setUser(data.user);
     }
   };
 

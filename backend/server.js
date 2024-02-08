@@ -42,5 +42,4 @@ const server = app.listen(process.env.PORT, () => {
 });
 
 console.log(server);
-
 module.exports = app;

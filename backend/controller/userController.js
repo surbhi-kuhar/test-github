@@ -19,7 +19,7 @@ const sendToken = async (user, statusCode, message, res) => {
 };
 
 module.exports.signup = async (req, res, next) => {
-  console.log("inside");
+  console.log("inside signup");
   const { name, email, password } = req.body;
 
   try {
