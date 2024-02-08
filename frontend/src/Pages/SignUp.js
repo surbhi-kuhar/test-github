@@ -52,6 +52,7 @@ function SignUp() {
     if (!name || !email || !password||!avatar) return;
 
     const formdata = new FormData();
+    console.log(avatar);
     formdata.append("avatar", avatar);
     formdata.append("name",name);
     formdata.append("email", email);
@@ -65,6 +66,7 @@ function SignUp() {
 
     try {
       const { data } = await axios.post(`${server}/user/signup`, formdata, config);
+      console.log(data);
       console.log("user", data.user);
     } catch (err) {
       console.log("err", err);

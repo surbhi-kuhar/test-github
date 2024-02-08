@@ -4,7 +4,8 @@ const {
   deleteProduct,
   getProduct,
   updateProduct,
-  searchProducts
+  searchProducts,
+  searchProductBYChatGpt
 } = require("../controller/productController");
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.get("/search",searchProducts);
 router.post("/create", createProduct);
 router.put("/update/:id", updateProduct);
 router.delete("/delete/:id", deleteProduct);
+router.get("/searchgpt",searchProductBYChatGpt);
 
 
 module.exports = router;

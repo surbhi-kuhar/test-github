@@ -2,6 +2,7 @@ const customError = require("../middleware/customError");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendMail");
+const cloudinary=require("cloudinary");
 const sendToken=async(user,statusCode,message,res)=>{
   const token=user.getToken();
   console.log("hello");
@@ -19,9 +20,9 @@ const sendToken=async(user,statusCode,message,res)=>{
 };
 
 module.exports.signup = async (req, res, next) => {
-  console.log("inside");
+  console.log("inside signUp");
   const { name, email, password } = req.body;
-  
+  console.log(req.body.avatar);
   try {
     const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
       folder: "avatars",
@@ -33,7 +34,6 @@ module.exports.signup = async (req, res, next) => {
     console.log(name, email, password);
   
     const user = await User.findOne({ email: email });
-  
     if (user) {
       throw new customError("User Already Exists", 400); // Throw error instead of using next()
     }
@@ -47,14 +47,14 @@ module.exports.signup = async (req, res, next) => {
   
     const activationToken = createActivationToken(newUserToBeCreated);
   
-    const activationUrl = http://localhost:3000/activation/${activationToken};
+    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
   
     console.log(newUserToBeCreated.email);
   
     await sendEmail({
       email: newUserToBeCreated.email,
       subject: "Activate Your Account",
-      message: Hello ${newUserToBeCreated.fullname} Please Click To Activate On The Link For Your Account: ${activationUrl},
+      message:` Hello ${newUserToBeCreated.fullname} Please Click To Activate On The Link For Your Account: ${activationUrl}`,
     });
   
     res.status(200).json({

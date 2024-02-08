@@ -157,3 +157,29 @@ module.exports.searchProducts = async (req, res, next) => {
     next(new customError(err));
   }
 };
+// Assume you have a Product model representing your products in MongoDB
+
+ // Import your Product model
+
+// Controller to handle product search
+module.exports.searchProductBYChatGpt = async (req, res) => {
+  try {
+    const { query } = req.query; // Get the search query from the request
+
+    // Split the query into keywords
+    // const keywords = query.split(' ');
+
+    // Construct a MongoDB query to search for products containing all keywords
+    const searchQuery = { name: query  }; // This will find products containing all keywords
+
+    // Execute the search query
+    const products = await Product.find(searchQuery);
+
+    // Send the found products as the response
+    res.json(products);
+  } catch (error) {
+    console.error('Error searching products:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
