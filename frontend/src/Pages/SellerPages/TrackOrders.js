@@ -7,5 +7,4 @@ const TrackOrders = () => {
     </div>
   )
 }
-
-export default TrackOrders
+export default TrackOrders;

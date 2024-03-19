@@ -41,5 +41,4 @@ const ActivateAccount = () => {
         </div>
     );
 };
-
 export default ActivateAccount;

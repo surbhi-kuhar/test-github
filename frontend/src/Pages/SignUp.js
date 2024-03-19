@@ -5,7 +5,7 @@ import hidepng from '../images/hide.png';
 import showpng from '../images/show.png';
 import { server } from "../FixedUrl";
 import axios from "axios";
-
+import { toast } from 'react-toastify';
 function SignUp() {
   const [passwordLength, setPasswordLength] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -66,8 +66,10 @@ function SignUp() {
     try {
       const { data } = await axios.post(`${server}/user/signup`, formdata, config);
       console.log("user", data.user);
+      toast.success(data.message);
     } catch (err) {
       console.log("err", err);
+      toast(err.message);
     }
   };
 
@@ -77,7 +79,8 @@ function SignUp() {
         <div className="heading">
           <h2>Register as a new user</h2>
         </div>
-        <div className="content">
+        <div className="content" style={{position: "relative",
+  top: "15rem"}}>
           <div>
             <label>Full name</label>
             <br />

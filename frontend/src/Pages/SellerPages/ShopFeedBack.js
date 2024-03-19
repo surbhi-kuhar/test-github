@@ -2,10 +2,7 @@ import React from 'react'
 
 const ShopFeedBack = () => {
   return (
-    <div>
-      FEEDBACK
-    </div>
+    <div>ShopFeedBack</div>
   )
 }
-
-export default ShopFeedBack
+export default ShopFeedBack;

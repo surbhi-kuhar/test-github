@@ -12,8 +12,8 @@ img{
   height:2rem;
 }
 .center-div {
-  width: 30%;
-  height: 60vh;
+  width: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -21,18 +21,16 @@ img{
 }
 
 .heading {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
+  text-align: center;
+  color: red;
 }
 
-.content {
-  width: 100%;
-  padding-right: 2%;
-  display: flex;
+/* .content {
+  position: relative;
+  top: 15rem;
   flex-direction: column;
   justify-content: space-evenly;
-}
+} */
 
 input {
   border-radius: 5px;

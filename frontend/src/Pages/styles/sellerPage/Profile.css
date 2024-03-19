@@ -1,5 +1,17 @@
-* {
-  box-sizing: border-box;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid rgb(199, 198, 198);
+  border-radius: 15px;
 }
 
 .sellerpage {
@@ -10,7 +22,7 @@
   top: 5px;
   display: grid;
   grid-template-columns: 1fr 4fr;
-  align-items: center; /* Add this line to vertically center align */
+  align-items: flex-start; /* Align items to the top */
 }
 
 .div2,
@@ -19,30 +31,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px; /* Add padding to create space */
+  padding: 20px;
+  width: 100%; /* Occupy full width */
 }
 
-.image{
-  width:100px;
-  height:100px;
+.image {
+  width: 100px;
+  height: 100px;
 }
-
-.form-container {
-  text-align: center;
-  margin: auto; /* Add this line to vertically center align */
-  max-width: 400px; /* Adjust the max-width based on your design */
-}
-/* 
-
-.sellerpage {
-  height: 90vh;
-  width: 95vw;
-  position: relative;
-  left: 5px;
-  top: 5px;
-  display: grid;
-  grid-template-columns: 1fr 4fr;
-} */
 
 ul {
   list-style: none;
@@ -74,21 +70,10 @@ li {
 .form-container {
   text-align: center;
   margin: auto;
-  max-width: 400px;
+  width: 100%;
+  /* border: 2px solid red; */
   width: 100%; /* Maintain width */
   padding: 20px; /* Add padding for space */
-}
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-.container {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
 }
 
 .profile-image {
@@ -117,16 +102,16 @@ body {
   border-radius: 50%;
 }
 
-.row::after {
-  content: "";
-  clear: both;
-  display: table;
+label {
+  float: left;
 }
 
 .column {
-  width: 45%;
+  /* border:2px solid blue; */
+  width: 48%; /* Adjust the width */
   float: left;
   margin: 1%;
+  text-align: center; /* Center align content */
 }
 
 label {
@@ -134,10 +119,9 @@ label {
   margin-bottom: 8px;
 }
 
-input,
-button {
-  width: calc(100% - 20px);
-  padding: 10px;
+input {
+  width: 100%;
+  padding: 15px; /* Adjust padding for more height */
   margin-bottom: 16px;
   display: inline-block;
   border: 1px solid #ccc;
@@ -145,13 +129,15 @@ button {
   border-radius: 4px;
 }
 
-button {
+.update-btn {
   background-color: #4caf50;
   color: white;
   padding: 15px;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #45a049;
+.update-btn:hover {
+  background-color: white;
+  border: 1px solid #4caf50;
+  color: #4caf50;
 }

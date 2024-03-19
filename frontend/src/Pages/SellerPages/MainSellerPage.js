@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Becomeseller from "./BecomeSeller";
 import "../styles/sellerPage/MainSellerPage.css";
 import SellerMenu from "./SellerMenu";
@@ -9,8 +9,14 @@ import Orders from "./Orders";
 import TrackOrders from "./TrackOrders";
 import ShopFeedBack from "./ShopFeedBack";
 import Inbox from "./Inbox";
+import { useDispatch } from "react-redux";
+import { loadShop } from "../../actions/sellerAction";
 const MainSellerPage = () => {
   const [active, setActive] = useState(1);
+  const dispatch=useDispatch();
+  useEffect(()=>{
+    dispatch(loadShop());
+  },[]);
   return (
     <Fragment>
       <div className="sellerpage">
@@ -25,6 +31,7 @@ const MainSellerPage = () => {
           {active === 5 && <TrackOrders />}
           {active === 6 && <ShopFeedBack />}
           {active === 7 && <Inbox />}
+          {}
         </div>
       </div>
     </Fragment>

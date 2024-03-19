@@ -1,27 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles/Login.css";
-import { Link } from "react-router-dom";
-import axios from "axios";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../actions/userAction.js";
+import { toast } from 'react-toastify';
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState({});
-
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-    const { data } = await axios.post(
-      "http://localhost:8000/api/v1/user/login",
-      formData
-    );
-    console.log(data);
-    if (!data.success) {
-      console.log("Email or password entered is wrong");
-    } else {
-      setUser(data.user);
+  const navigate=useNavigate();
+  const u=useSelector((state)=>state.userreducer);
+  const {isAuthenticated}=u;
+  console.log(u);
+  useEffect(()=>{
+    if(isAuthenticated){
+      navigate("/");
+      return;
     }
+    if(u.user!=undefined){
+      setUser(u.user);
+      navigate("/");
+    }
+
+  },[isAuthenticated]);
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(login(email, password));
   };
 
   return (
